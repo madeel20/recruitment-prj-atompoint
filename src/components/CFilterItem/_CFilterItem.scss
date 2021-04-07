@@ -1,0 +1,15 @@
+.filter-item{
+    padding: 5px 10px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, .3);
+    color: $secondary;
+    background: $white;
+    border-radius: 5px;
+    margin: 5px 10px 5px 0px;
+    cursor: pointer;
+    transition: all 0.1s ease-in;
+
+    &:hover, &.active {
+        background: $primary;
+        color: $white;
+    }
+}
