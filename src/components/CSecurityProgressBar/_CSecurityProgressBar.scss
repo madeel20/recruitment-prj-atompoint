@@ -1,0 +1,25 @@
+.c-security-progress-bar{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 30px 10px 20px 10px;
+
+    .info-wrapper{
+        display: flex;
+        width: 100%;
+        align-items: center;
+
+        .statistics{
+            font-size: $font-size-lg;
+            font-family: $font-bold;
+            width: 90px;
+        }
+
+        .progress-bar{
+            width: 100%;
+
+        }
+
+    }
+
+}

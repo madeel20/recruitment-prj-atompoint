@@ -1,0 +1,30 @@
+.c-checklist-item{
+    width: 100%;
+    .MuiAccordionSummary-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .name-container{
+            width: 450px;
+
+            .group-text{
+                font-family: $font-light;
+            }
+        }
+
+
+        .item-attributes-container{
+            display: flex;
+            flex: 1 1;
+            justify-content: space-around;
+            align-items: center;
+
+            > div{
+                min-width: 75px;
+            }
+        }
+    }
+
+
+}
