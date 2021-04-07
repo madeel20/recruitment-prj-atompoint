@@ -6,47 +6,53 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { Chip } from '@material-ui/core';
+import { Checkbox, Chip, withStyles } from '@material-ui/core';
 
 const CChecklistItem = (props) => {
 
-    const {item} = props;
+    const { item } = props;
 
     return (
-        <Accordion className="c-checklist-item">
+        <div className="c-checklist-item-wrapper">
 
-        <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
-          aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-          <h6 className="name-container"> {item?.name} <span className="group-text">({item?.group}) </span></h6>
+            <Checkbox color="green" size="medium"  />
+
+            <Accordion className="c-checklist-item">
+
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                >
+                    <h6 className="name-container"> {item?.name} <span className="group-text">({item?.group}) </span></h6>
 
 
-          {/* <span className="category">
+                    {/* <span className="category">
                 {item?.category} 
           </span> */}
-          <span className="item-attributes-container">
+                    <span className="item-attributes-container">
 
-          <Chip label={item?.risk} color="" />
-          <Chip label={item?.category} color="primary" />
-          <Chip label={item?.cloud} color="secondary" />
+                        <Chip label={item?.risk} color="" />
+                        <Chip label={item?.category} color="primary" />
+                        <Chip label={item?.cloud} color="secondary" />
 
-        </span>
-      
+                    </span>
 
-        </AccordionSummary>
 
-        <AccordionDetails>
+                </AccordionSummary>
 
-          <Typography>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
-            sit amet blandit leo lobortis eget.
+                <AccordionDetails>
+
+                    <Typography>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus ex,
+                        sit amet blandit leo lobortis eget.
           </Typography>
 
-        </AccordionDetails>
+                </AccordionDetails>
 
-      </Accordion>
+            </Accordion>
+
+        </div>
     )
 }
 
