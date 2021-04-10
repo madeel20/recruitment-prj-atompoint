@@ -10,12 +10,12 @@ import { Checkbox, Chip, withStyles } from '@material-ui/core';
 
 const CChecklistItem = (props) => {
 
-    const { item } = props;
+    const { item, isChecked, onCheckClick } = props;
 
     return (
         <div className="c-checklist-item-wrapper">
 
-            <Checkbox color="default" size="medium" />
+            <Checkbox checked={isChecked} onClick={onCheckClick} color="default" size="medium" />
 
             <Accordion className="c-checklist-item">
 
@@ -26,13 +26,11 @@ const CChecklistItem = (props) => {
                 >
                     <h6 className="name-container">  {item?.description}     <span className="group-text">({item?.group}) </span></h6>
 
-
-                    {/* <span className="category">
-                {item?.category} 
-          </span> */}
                     <span className="item-attributes-container">
+
                         <Chip label={item?.risk} color="" />
                         <Chip label={item?.category} color="primary" />
+                        <Chip label={item?.service} color="secondary" />
                         <Chip label={item?.cloud} color="secondary" />
 
                     </span>
@@ -90,11 +88,15 @@ const CChecklistItem = (props) => {
 // default props values
 CChecklistItem.propTypes = {
     item: PropTypes.object,
+    onCheckClick: PropTypes.func,
+    isChecked: PropTypes.bool
 }
 
 // default props
 CChecklistItem.defaultProps = {
     item: {},
+    onCheckClick: null,
+    isChecked: false
 }
 
 export default CChecklistItem;

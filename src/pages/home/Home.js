@@ -9,9 +9,12 @@ import { MappedElement, usePersistedState } from '../../utils/helpers';
 import SecurityCheckListJson from '../../assets/jsons/signatures-metadata.json';
 import CChecklistItem from '../../components/CChecklistItem/CChecklistItem';
 
+console.log(SecurityCheckListJson)
+
 function Home() {
+
     const [filters, setFilters] = usePersistedState('filters', { providers: [], services: [] });
-    const [checked, setChecked] = usePersistedState('checked', []);
+    const [checklist, setChecklist] = usePersistedState('checklist', []);
     const [user, setUser] = usePersistedState('user', []);
 
 
@@ -58,6 +61,20 @@ function Home() {
         // else add service to filters
         setFilters(prevValue => { return { ...prevValue, services: [...prevValue.services, service] } });
     }
+
+    const handleOnCheck = (testName) => {
+
+        // first check if test is already in checked then remove it and return
+        if (checklist.includes(testName)) {
+            setChecklist(prevValue => prevValue.filter(it => it !== testName));
+            return;
+        }
+
+        // else add service to filters
+        setChecklist(prevValue => [...prevValue, testName]);
+    }
+
+
 
     return (
 
@@ -126,7 +143,7 @@ function Home() {
 
             </Paper>
 
-            <CSecurityProgressBar />
+            <CSecurityProgressBar totalChecks={SecurityCheckListJson.length} checksPerformed={checklist.length}  />
 
             <div className="checklist-wrapper">
 
@@ -134,13 +151,20 @@ function Home() {
                     data={getFilteredList()}
                     renderElement={(obj, index) => {
 
-                        return <CChecklistItem item={obj} key={obj?.name} />
+                        return <CChecklistItem
+
+                            isChecked={checklist.includes(obj?.name)}
+                            onCheckClick={()=>handleOnCheck(obj?.name)}
+                            item={obj}
+                            key={obj?.name}
+
+                        />
 
                     }} />
 
             </div>
 
-       
+
 
         </div>
 
