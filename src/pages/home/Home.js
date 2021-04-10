@@ -3,7 +3,7 @@ import { Paper } from '@material-ui/core';
 import CFilterItem from '../../components/CFilterItem/CFilterItem';
 import CSecurityProgressBar from '../../components/CSecurityProgressBar/CSecurityProgressBar';
 import { Providers, Services } from '../../utils/constants';
-import { MappedElement, usePersistedState } from '../../utils/helpers';
+import { checkUserExist, MappedElement, usePersistedState } from '../../utils/helpers';
 import SecurityCheckListJson from '../../assets/jsons/signatures-metadata.json';
 import CChecklistItem from '../../components/CChecklistItem/CChecklistItem';
 import { Lock } from '@material-ui/icons';
@@ -15,11 +15,18 @@ function Home() {
 
     const [filters, setFilters] = usePersistedState('filters', { providers: [], services: [] });
     const [checklist, setChecklist] = usePersistedState('checklist', []);
-    const [user, setUser] = usePersistedState('user', []);
-    const [openRegForm,setOpenRegForm] = useState(false);
+    const [user, setUser] = usePersistedState('user', {});
+    const [openRegForm, setOpenRegForm] = useState(false);
 
 
     const getFilteredList = useCallback(() => {
+
+        // check if user is not registered yet then don't apply filters
+        console.log(user,checkUserExist(user))
+        if (!checkUserExist(user)) {
+            return SecurityCheckListJson.slice(1, 4);
+        }
+
         let filteredData = SecurityCheckListJson;
 
         // first filter by provider
@@ -36,7 +43,7 @@ function Home() {
         //return the filtered data
         return filteredData;
 
-    }, [filters]);
+    }, [filters,user]);
 
 
     const handleProviderClick = (provider) => {
@@ -149,7 +156,7 @@ function Home() {
             <div className="checklist-wrapper">
 
                 <MappedElement
-                    data={getFilteredList().slice(1, 4)}
+                    data={getFilteredList()}
                     renderElement={(obj, index) => {
 
                         return <CChecklistItem
@@ -165,13 +172,19 @@ function Home() {
 
 
 
-                    <div onClick={()=>setOpenRegForm(true)} className="lock-container">
+                {!checkUserExist(user) &&
+                    <div onClick={() => setOpenRegForm(true)} className="lock-container">
                         <Lock />
-                        <h6>Click to register and unlock checklist.</h6>
+                        <h6 className="mt-2">Click to register and unlock all checklist items.</h6>
                     </div>
+                }
 
 
-                    <CRegisterForm open={openRegForm} onClose={()=>setOpenRegForm(false)} />
+                <CRegisterForm
+                    open={openRegForm}
+                    onClose={() => setOpenRegForm(false)}
+                    onRegistration={(user) => setUser(user)}
+                />
 
             </div>
         </div>

@@ -5,6 +5,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import { firestore } from '../../firebase';
 import Slide from '@material-ui/core/Slide';
 import PropTypes from 'prop-types';
 import { phoneRegExp } from '../../utils/helpers';
@@ -31,19 +32,33 @@ const validationSchema = yup.object({
 
 const CRegisterForm = (props) => {
 
-    const { open, onClose } = props;
+    const { open, onClose, onRegistration } = props;
     const [loading, setLoading] = useState(false);
 
     const handleClose = () => {
         onClose();
     };
 
-    const onSubmit = () => {
+    const onSubmit = (values) => {
+
+        setLoading(true);
+        
+        firestore.collection('users').add(values).then(res => {
+
+            setLoading(false);
+            onRegistration(values);
+            handleClose();
+
+        }).catch(error => {
+            console.log(error);
+            setLoading(false);
+        });
+
 
     }
 
     const formik = useFormik({
-        initialValues: {name:'',email:'',phoneNumber:'',organization:''},
+        initialValues: { name: '', email: '', phoneNumber: '', organization: '' },
         validationSchema: validationSchema,
         onSubmit: onSubmit
     });
@@ -134,9 +149,14 @@ const CRegisterForm = (props) => {
                      </Button>
 
                     </Grid>
+
                 </form>
+
+
             </DialogContent>
+
         </Dialog>
+
     );
 }
 
@@ -144,12 +164,14 @@ const CRegisterForm = (props) => {
 CRegisterForm.propTypes = {
     open: PropTypes.bool,
     onClose: PropTypes.func,
+    onRegistration: PropTypes.func,
 }
 
 // default props
 CRegisterForm.defaultProps = {
     open: false,
-    onClose: null
+    onClose: null,
+    onRegistration: null,
 }
 
 export default CRegisterForm;
