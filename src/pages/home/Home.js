@@ -3,11 +3,11 @@ import { Paper } from '@material-ui/core';
 import CFilterItem from '../../components/CFilterItem/CFilterItem';
 import CSecurityProgressBar from '../../components/CSecurityProgressBar/CSecurityProgressBar';
 import { Providers, Services } from '../../utils/constants';
-import Backdrop from '@material-ui/core/Backdrop';
-import CircularProgress from '@material-ui/core/CircularProgress';
 import { MappedElement, usePersistedState } from '../../utils/helpers';
 import SecurityCheckListJson from '../../assets/jsons/signatures-metadata.json';
 import CChecklistItem from '../../components/CChecklistItem/CChecklistItem';
+import { Lock } from '@material-ui/icons';
+import CRegisterForm from '../../components/CRegisterForm/CRegisterForm';
 
 console.log(SecurityCheckListJson)
 
@@ -16,6 +16,7 @@ function Home() {
     const [filters, setFilters] = usePersistedState('filters', { providers: [], services: [] });
     const [checklist, setChecklist] = usePersistedState('checklist', []);
     const [user, setUser] = usePersistedState('user', []);
+    const [openRegForm,setOpenRegForm] = useState(false);
 
 
     const getFilteredList = useCallback(() => {
@@ -78,7 +79,7 @@ function Home() {
 
     return (
 
-        <div className="container">
+        <div className="container home-container">
 
             <h1 className="mt-4 mb-4 "> Cloud Security Checklist </h1>
 
@@ -143,18 +144,18 @@ function Home() {
 
             </Paper>
 
-            <CSecurityProgressBar totalChecks={SecurityCheckListJson.length} checksPerformed={checklist.length}  />
+            <CSecurityProgressBar totalChecks={SecurityCheckListJson.length} checksPerformed={checklist.length} />
 
             <div className="checklist-wrapper">
 
                 <MappedElement
-                    data={getFilteredList()}
+                    data={getFilteredList().slice(1, 4)}
                     renderElement={(obj, index) => {
 
                         return <CChecklistItem
 
                             isChecked={checklist.includes(obj?.name)}
-                            onCheckClick={()=>handleOnCheck(obj?.name)}
+                            onCheckClick={() => handleOnCheck(obj?.name)}
                             item={obj}
                             key={obj?.name}
 
@@ -162,10 +163,17 @@ function Home() {
 
                     }} />
 
+
+
+                    <div onClick={()=>setOpenRegForm(true)} className="lock-container">
+                        <Lock />
+                        <h6>Click to register and unlock checklist.</h6>
+                    </div>
+
+
+                    <CRegisterForm open={openRegForm} onClose={()=>setOpenRegForm(false)} />
+
             </div>
-
-
-
         </div>
 
 

@@ -1,18 +1,41 @@
-.filters-container{
-    display: flex;
-    padding: 15px 15px;
-    flex-direction: column;
-    justify-content: space-between;
-   
+.home-container {
 
-    .filters{
+    .filters-container{
         display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        
-        h6{
-            margin: 0px 10px 0px 0px;
-        }
-    }
+        padding: 15px 15px;
+        flex-direction: column;
+        justify-content: space-between;
     
-}   
+
+        .filters{
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            
+            h6{
+                margin: 0px 10px 0px 0px;
+            }
+        }
+
+       
+        
+    }  
+
+    .lock-container{
+        width: 100%;
+        padding: 30px 0px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        background-color: rgba(0,0,0,0.05);
+        &:hover{
+            background-color: rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+
+    }
+
+
+}
