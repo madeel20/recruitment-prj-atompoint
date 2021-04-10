@@ -21,6 +21,9 @@ function Home() {
                 <h4>Filter by cloud service providers: </h4>
 
                 <div>
+
+                    <CFilterItem isActive={true} filter={{name: 'All'}} onClick={() => { alert('asdf') }} />
+
                     <MappedElement data={Providers} renderElement={(obj, index) => {
                         return <CFilterItem isActive={true} filter={obj} onClick={() => { alert('asdf') }} />
                     }} />

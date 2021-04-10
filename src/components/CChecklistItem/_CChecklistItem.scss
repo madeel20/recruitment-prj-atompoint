@@ -1,39 +1,68 @@
 .c-checklist-item-wrapper{
     width: 100%;
     display: flex;
+    align-items: flex-start;
     margin-bottom: 10px;
     
-    .MuiSvgIcon-root {
-        fill:$primary;
-    }
 
-.c-checklist-item{
-    width: 100%;
-    .MuiAccordionSummary-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+    .MuiCheckbox-root{
+        margin: 16px 0px 0px 0px;
 
-        .name-container{
-            width: 450px;
-
-            .group-text{
-                font-family: $font-light;
-            }
+        .MuiSvgIcon-root {
+            fill:$primary;
         }
 
+    }
 
-        .item-attributes-container{
+    
+
+    .c-checklist-item{
+        width: 100%;
+
+        .MuiAccordionSummary-root {
+            
+            min-height: 48px;
+
+            .MuiAccordionSummary-content {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                .name-container{
+                flex:1;
+
+                    .group-text{
+                        font-family: $font-light;
+                    }
+                }
+
+
+                .item-attributes-container{
+                    display: flex;
+                    justify-content: space-around;
+                    align-items: center;
+
+                    > div{
+                        min-width: 75px;
+                        margin-right: 5px;
+                    }
+                }
+            }
+
+            
+
+        }
+
+        .details-container{
             display: flex;
-            flex: 1 1;
-            justify-content: space-around;
-            align-items: center;
+            flex-direction: column;
 
-            > div{
-                min-width: 75px;
+            .remediation-steps {
+                white-space: pre-line;
+               line-height: 30px;
             }
+
         }
-    }
 
     }
 
