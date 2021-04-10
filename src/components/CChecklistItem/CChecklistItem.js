@@ -15,7 +15,7 @@ const CChecklistItem = (props) => {
     return (
         <div className="c-checklist-item-wrapper">
 
-            <Checkbox color="green" size="medium" />
+            <Checkbox color="default" size="medium" />
 
             <Accordion className="c-checklist-item">
 
