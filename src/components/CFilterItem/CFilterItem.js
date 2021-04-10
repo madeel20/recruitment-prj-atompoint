@@ -8,7 +8,7 @@ const CFilterItem = (props) => {
     return (
 
         <span onClick={onClick}  className={`filter-item ${isActive?'active':''}`}>
-                {filter?.name}
+                {filter}
         </span>
 
     )
@@ -16,14 +16,14 @@ const CFilterItem = (props) => {
 
 // default props values
 CFilterItem.propTypes = {
-    filter: PropTypes.object,
+    filter: PropTypes.string,
     isActive: PropTypes.bool,
     onClick: PropTypes.func
 }
 
 // default props
 CFilterItem.defaultProps = {
-    filter: {name:''},
+    filter: '',
     isActive: false,
     onClick: null
 }
