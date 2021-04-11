@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Paper } from '@material-ui/core';
 import CFilterItem from '../../components/CFilterItem/CFilterItem';
 import CSecurityProgressBar from '../../components/CSecurityProgressBar/CSecurityProgressBar';
@@ -8,6 +8,7 @@ import SecurityCheckListJson from '../../assets/jsons/signatures-metadata.json';
 import CChecklistItem from '../../components/CChecklistItem/CChecklistItem';
 import { Lock } from '@material-ui/icons';
 import CRegisterForm from '../../components/CRegisterForm/CRegisterForm';
+import { Alert } from 'bootstrap';
 
 
 function Home() {
@@ -16,7 +17,11 @@ function Home() {
     const [checklist, setChecklist] = usePersistedState('checklist', []);
     const [user, setUser] = usePersistedState('user', {});
     const [openRegForm, setOpenRegForm] = useState(false);
+    const [successMsg, setSuccessMsg] = useState('');
 
+    useEffect(() => {
+
+    }, []);
 
     const getFilteredList = useCallback(() => {
 
@@ -41,7 +46,7 @@ function Home() {
         //return the filtered data
         return filteredData;
 
-    }, [filters,user]);
+    }, [filters, user]);
 
 
     const handleProviderClick = (provider) => {
@@ -92,6 +97,8 @@ function Home() {
             <Paper className="filters-container">
 
                 <h4>Filter by cloud service providers: </h4>
+
+
 
                 <div>
 
@@ -168,9 +175,16 @@ function Home() {
 
                     }} />
 
+                {successMsg &&
 
+                    <div class="alert alert-success text-center" role="alert">
+                        {successMsg}
+                    </div>
+                }
 
-                {!checkUserExist(user) &&
+                
+
+                {!checkUserExist(user) && !successMsg &&
                     <div onClick={() => setOpenRegForm(true)} className="lock-container">
                         <Lock />
                         <h6 className="mt-2">Click to register and unlock all checklist items.</h6>
@@ -178,11 +192,14 @@ function Home() {
                 }
 
 
+
                 <CRegisterForm
                     open={openRegForm}
                     onClose={() => setOpenRegForm(false)}
-                    onRegistration={(user) => setUser(user)}
+                    onRegistration={(msg) => setSuccessMsg(msg)}
                 />
+
+
 
             </div>
         </div>

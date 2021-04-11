@@ -8,7 +8,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import { firestore } from '../../firebase';
 import Slide from '@material-ui/core/Slide';
 import PropTypes from 'prop-types';
-import { phoneRegExp } from '../../utils/helpers';
+import { phoneRegExp, sendConfirmationEmails } from '../../utils/helpers';
 import { CircularProgress, Grid, TextField } from '@material-ui/core';
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -43,10 +43,14 @@ const CRegisterForm = (props) => {
 
         setLoading(true);
         
-        firestore.collection('users').add(values).then(res => {
+        firestore.collection('users').add({
+            ...values,
+            
+        }).then(docRef => {
 
             setLoading(false);
-            onRegistration(values);
+            sendConfirmationEmails(values.name,values.email, docRef?.id );
+            onRegistration('Registration Successful! Check your email, to view full checklist.');
             handleClose();
 
         }).catch(error => {
@@ -62,6 +66,7 @@ const CRegisterForm = (props) => {
         validationSchema: validationSchema,
         onSubmit: onSubmit
     });
+
 
 
     return (
