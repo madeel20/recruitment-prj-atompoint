@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import emailjs from 'emailjs-com';
+import { firestore } from '../firebase';
 
 export const MappedElement = ({ data, renderElement, count }) => {
     if (data && data.length) {
@@ -13,6 +14,15 @@ export const MappedElement = ({ data, renderElement, count }) => {
     }
     return null;
 };
+
+export function gup( name, url ) {
+    if (!url) url = window.location.href;
+    name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+    var regexS = "[\\?&]"+name+"=([^&#]*)";
+    var regex = new RegExp( regexS );
+    var results = regex.exec( url );
+    return results == null ? null : results[1];
+}
 
 export const usePersistedState = (key, defaultValue) => {
     const [state, setState] = React.useState(
@@ -40,7 +50,7 @@ export const checkUserExist = (user) => Object.entries(user).length > 0
 export const sendConfirmationEmails = (fullName, email, key) => {
     let templateParams = {
         to_name: fullName,
-        link_url: 'https://security-checkist.web.app/key?' + key,
+        link_url: 'https://security-checkist.web.app?key=' + key,
         to_email: email,
     };
 
@@ -52,7 +62,6 @@ export const sendConfirmationEmails = (fullName, email, key) => {
 
             let templateParams = {
                 to_name: email,
-                link_url: 'https://security-checkist.web.app/key?' + key,
                 to_email: 'aliadeel20@gmail.com',
             };
 
@@ -67,5 +76,67 @@ export const sendConfirmationEmails = (fullName, email, key) => {
         }, function (err) {
             console.log('FAILED...', err);
         });
+
+}
+
+
+export const checkUserVerification = (user,setUser,setUserVerified) =>{
+
+    // first check if user exist or not
+    if(checkUserExist(user)){
+      return  firestore.collection('users').doc(user?.key).get().then(res=>{
+
+            // if user exist then return and verify the user
+            if(res.exists){
+                setUserVerified(true);
+                return;
+            }
+            else {
+                setUserVerified(false);
+                setUser({ });
+                return;
+            }
+
+        }).catch((err)=>{
+            console.log(err)
+            setUserVerified(false);
+            return;
+        });
+
+    }
+
+    // now if user does not exist , check for veryify key param that was sent through email
+    let keyFromUrl = gup('key');
+    window.history.pushState(null, null, window.location.pathname);
+
+    // check if the key param exist for verification
+    if(keyFromUrl) {
+            // verify key from firestore
+            return  firestore.collection('users').doc(keyFromUrl).get().then(res=>{
+
+                // if user exist then return and verify the user
+                if(res.exists){
+                    setUserVerified(true);
+                    setUser({key: keyFromUrl });
+                    return;
+                }
+                else {
+                    setUserVerified(false);
+                    setUser({ });
+                    return;
+                }
+               
+    
+            }).catch((err)=>{
+                console.log(err)
+                setUserVerified(false);
+                return;
+            });
+    }
+    else {
+        setUserVerified(false);
+        return;
+    }
+
 
 }

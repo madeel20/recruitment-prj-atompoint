@@ -3,7 +3,7 @@ import { Paper } from '@material-ui/core';
 import CFilterItem from '../../components/CFilterItem/CFilterItem';
 import CSecurityProgressBar from '../../components/CSecurityProgressBar/CSecurityProgressBar';
 import { Providers, Services } from '../../utils/constants';
-import { checkUserExist, MappedElement, usePersistedState } from '../../utils/helpers';
+import { checkUserExist, MappedElement, usePersistedState,checkUserVerification } from '../../utils/helpers';
 import SecurityCheckListJson from '../../assets/jsons/signatures-metadata.json';
 import CChecklistItem from '../../components/CChecklistItem/CChecklistItem';
 import { Lock } from '@material-ui/icons';
@@ -16,17 +16,20 @@ function Home() {
     const [filters, setFilters] = usePersistedState('filters', { providers: [], services: [] });
     const [checklist, setChecklist] = usePersistedState('checklist', []);
     const [user, setUser] = usePersistedState('user', {});
+    const [userVerified, setUserVerified] = useState(false);
     const [openRegForm, setOpenRegForm] = useState(false);
     const [successMsg, setSuccessMsg] = useState('');
 
     useEffect(() => {
+        
+        checkUserVerification(user,setUser,setUserVerified);
 
     }, []);
 
     const getFilteredList = useCallback(() => {
 
         // check if user is not registered yet then don't apply filters
-        if (!checkUserExist(user)) {
+        if (!userVerified) {
             return SecurityCheckListJson.slice(1, 4);
         }
 
@@ -46,7 +49,7 @@ function Home() {
         //return the filtered data
         return filteredData;
 
-    }, [filters, user]);
+    }, [filters, userVerified]);
 
 
     const handleProviderClick = (provider) => {
@@ -184,7 +187,7 @@ function Home() {
 
                 
 
-                {!checkUserExist(user) && !successMsg &&
+                {!userVerified && !successMsg &&
                     <div onClick={() => setOpenRegForm(true)} className="lock-container">
                         <Lock />
                         <h6 className="mt-2">Click to register and unlock all checklist items.</h6>
