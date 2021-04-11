@@ -6,6 +6,12 @@
         padding: 15px 15px;
         flex-direction: column;
         justify-content: space-between;
+
+        small{
+            font-size: 15px;
+            color: grey;
+            opacity: 0.6;
+        }
     
 
         .filters{

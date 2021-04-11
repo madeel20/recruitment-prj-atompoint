@@ -1,17 +1,18 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Paper } from '@material-ui/core';
 import CFilterItem from '../../components/CFilterItem/CFilterItem';
 import CSecurityProgressBar from '../../components/CSecurityProgressBar/CSecurityProgressBar';
 import { Providers, Services } from '../../utils/constants';
-import { checkUserExist, MappedElement, usePersistedState,checkUserVerification } from '../../utils/helpers';
+import { MappedElement, usePersistedState, checkUserVerification } from '../../utils/helpers';
 import SecurityCheckListJson from '../../assets/jsons/signatures-metadata.json';
 import CChecklistItem from '../../components/CChecklistItem/CChecklistItem';
 import { Lock } from '@material-ui/icons';
 import CRegisterForm from '../../components/CRegisterForm/CRegisterForm';
-import { Alert } from 'bootstrap';
 
 
 function Home() {
+
+    // usePersistedState ==> manages the state value in local storage as well
 
     const [filters, setFilters] = usePersistedState('filters', { providers: [], services: [] });
     const [checklist, setChecklist] = usePersistedState('checklist', []);
@@ -21,11 +22,12 @@ function Home() {
     const [successMsg, setSuccessMsg] = useState('');
 
     useEffect(() => {
-        
-        checkUserVerification(user,setUser,setUserVerified);
-
+        // verify user 
+        checkUserVerification(user, setUser, setUserVerified);
     }, []);
 
+
+    // this method is to get filtered check list
     const getFilteredList = useCallback(() => {
 
         // check if user is not registered yet then don't apply filters
@@ -51,7 +53,7 @@ function Home() {
 
     }, [filters, userVerified]);
 
-
+    // this is triggered on every time a provider is clicked
     const handleProviderClick = (provider) => {
 
         // first check if provider is already in filters then remove it and return
@@ -64,6 +66,7 @@ function Home() {
         setFilters(prevValue => { return { ...prevValue, providers: [...prevValue.providers, provider] } });
     }
 
+    // this is triggered on every time a service is clicked
     const handleServiceClick = (service) => {
 
         // first check if service is already in filters then remove it and return
@@ -76,6 +79,7 @@ function Home() {
         setFilters(prevValue => { return { ...prevValue, services: [...prevValue.services, service] } });
     }
 
+    // this is triggered on everytime checklist item is checked or unchecked
     const handleOnCheck = (testName) => {
 
         // first check if test is already in checked then remove it and return
@@ -94,13 +98,19 @@ function Home() {
 
         <div className="container home-container">
 
-            <h1 className="mt-4 mb-4 "> Cloud Security Checklist </h1>
+            <h1 className="pt-4 mb-4 "> Cloud Security Checklist </h1>
 
 
             <Paper className="filters-container">
 
-                <h4>Filter by cloud service providers: </h4>
+                <h4>Filter by cloud service providers:
 
+                    {/* Remind user to register first to apply filters */}
+                    {!userVerified &&
+                        <small> <cite> (Register to apply filters)</cite></small>
+                    }
+
+                </h4>
 
 
                 <div>
@@ -116,6 +126,8 @@ function Home() {
                             onClick={() => setFilters(prevValue => { return { ...prevValue, providers: [] } })}
                             key={'all'}
                         />
+
+                        {/* Render all providers */}
 
                         <MappedElement
                             data={Providers}
@@ -142,6 +154,8 @@ function Home() {
                             key={'all'}
                         />
 
+                        {/* Render all services*/}
+
                         <MappedElement
                             data={Services}
                             renderElement={(obj, index) => {
@@ -163,12 +177,13 @@ function Home() {
 
             <div className="checklist-wrapper">
 
+                {/* Render all security checklist items*/}
+
                 <MappedElement
                     data={getFilteredList()}
                     renderElement={(obj, index) => {
 
                         return <CChecklistItem
-
                             isChecked={checklist.includes(obj?.name)}
                             onCheckClick={() => handleOnCheck(obj?.name)}
                             item={obj}
@@ -178,6 +193,9 @@ function Home() {
 
                     }} />
 
+
+                {/* this message shows only when user has successfully registered  */}
+
                 {successMsg &&
 
                     <div class="alert alert-success text-center" role="alert">
@@ -185,7 +203,8 @@ function Home() {
                     </div>
                 }
 
-                
+
+                {/* this renders when user is not verified or not applied for registration  */}
 
                 {!userVerified && !successMsg &&
                     <div onClick={() => setOpenRegForm(true)} className="lock-container">
@@ -195,7 +214,7 @@ function Home() {
                 }
 
 
-
+                {/* Sign up form for registration triggers on openRegForm state */}
                 <CRegisterForm
                     open={openRegForm}
                     onClose={() => setOpenRegForm(false)}
