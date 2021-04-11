@@ -9,7 +9,6 @@ import CChecklistItem from '../../components/CChecklistItem/CChecklistItem';
 import { Lock } from '@material-ui/icons';
 import CRegisterForm from '../../components/CRegisterForm/CRegisterForm';
 
-console.log(SecurityCheckListJson)
 
 function Home() {
 
@@ -22,7 +21,6 @@ function Home() {
     const getFilteredList = useCallback(() => {
 
         // check if user is not registered yet then don't apply filters
-        console.log(user,checkUserExist(user))
         if (!checkUserExist(user)) {
             return SecurityCheckListJson.slice(1, 4);
         }
